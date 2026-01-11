@@ -528,7 +528,6 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
     <nav>
         <a href="index.html" class="logo">
             <div class="logo-icon">
@@ -545,7 +544,6 @@
         </ul>
     </nav>
 
-    <!-- Main Content -->
     <div class="main-container">
         <div class="form-container">
             <div class="form-header">
@@ -560,19 +558,17 @@
             </div>
 
             <div class="form-card">
-                <!-- n8n Configuration Notice - Bunu sonra kaldırabilirsin -->
                 <div class="config-notice" id="configNotice">
                     <h4>⚙️ n8n Yapılandırması Gerekli</h4>
                     <p>Bu formu çalıştırmak için <code>config.js</code> dosyasındaki <code>N8N_WEBHOOK_URL</code> değerini kendi n8n webhook URL'iniz ile değiştirin.</p>
                 </div>
 
                 <form id="emergencyForm">
-                    <!-- Emergency Type Selection -->
                     <div class="form-group">
                         <label class="form-label">Durum Tipi <span class="required">*</span></label>
                         <div class="emergency-types">
                             <label class="emergency-type" data-type="yangin">
-                                <input type="radio" name="emergency_type" value="yangin" required>
+                                <input type="radio" name="emergency_type" value="yangin">
                                 <div class="icon">🔥</div>
                                 <div class="label">Yangın</div>
                             </label>
@@ -614,7 +610,6 @@
                         </div>
                     </div>
 
-                    <!-- Location -->
                     <div class="form-group location-group">
                         <label class="form-label">Konum <span class="required">*</span></label>
                         <input type="text" class="form-input" id="location" name="location" placeholder="Adres veya konum bilgisi..." required>
@@ -623,11 +618,9 @@
                         </button>
                     </div>
 
-                    <!-- Hidden fields for coordinates -->
                     <input type="hidden" id="latitude" name="latitude">
                     <input type="hidden" id="longitude" name="longitude">
 
-                    <!-- Name and Phone -->
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Adınız Soyadınız <span class="required">*</span></label>
@@ -639,19 +632,16 @@
                         </div>
                     </div>
 
-                    <!-- Description -->
                     <div class="form-group">
                         <label class="form-label">Açıklama <span class="required">*</span></label>
                         <textarea class="form-input" id="description" name="description" placeholder="Durumu detaylı açıklayın..." required></textarea>
                     </div>
 
-                    <!-- Submit Button -->
                     <button type="submit" class="submit-btn" id="submitBtn">
                         <span class="spinner"></span>
                         <span class="btn-text">🚨 ACİL DURUM BİLDİR</span>
                     </button>
 
-                    <!-- Status Messages -->
                     <div class="status-message success" id="successMessage">
                         <span>✓</span>
                         <span>Bildiriminiz başarıyla gönderildi! Ekiplerimiz en kısa sürede sizinle iletişime geçecek.</span>
@@ -662,7 +652,6 @@
                     </div>
                 </form>
 
-                <!-- Emergency Info -->
                 <div class="emergency-info">
                     <span class="icon">ℹ️</span>
                     <p class="text">
@@ -673,7 +662,6 @@
         </div>
     </div>
 
-    <!-- Config File -->
     <script src="config.js"></script>
     
     <script>
@@ -774,6 +762,15 @@
             };
             
             const emergencyType = formData.get('emergency_type');
+            
+            // DÜZELTME: Manuel doğrulama eklendi
+            if (!emergencyType) {
+                errorText.textContent = 'Lütfen bir acil durum tipi seçiniz.';
+                errorMessage.classList.add('show');
+                successMessage.classList.remove('show');
+                return;
+            }
+
             const typeText = typeEmojis[emergencyType] || '🆘 ACİL';
             
             // Format message like: 🔥 YANGIN | Adres | İsim | Telefon | Açıklama
