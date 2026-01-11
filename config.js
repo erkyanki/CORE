@@ -8,7 +8,7 @@
 // =====================================================
 
 // n8n Webhook URL
-const N8N_WEBHOOK_URL = 'https://yankiural.app.n8n.cloud/webhook/c513e34b-4342-42c8-b166-95be9c616a62';
+const N8N_WEBHOOK_URL = 'https://yankiural.app.n8n.cloud/webhook/ceb40d4f-d308-4cc3-8662-6f50145b1473';
 
 // =====================================================
 // n8n WEBHOOK KURULUMU
