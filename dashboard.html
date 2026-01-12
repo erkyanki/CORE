@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | CORE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --accent-red: #ff2d55;
+            --accent-orange: #ff6b35;
+            --accent-yellow: #ffc107;
+            --accent-gradient: linear-gradient(135deg, #ff2d55 0%, #ff6b35 50%, #ffc107 100%);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --success: #00ff88;
+            --warning: #ffc107;
+            --danger: #ff4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 0.2em;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--accent-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 45, 85, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(255, 45, 85, 0.8); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .admin-btn {
+            padding: 0.6rem 1.2rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .admin-btn:hover {
+            border-color: var(--accent-red);
+            color: var(--text-primary);
+        }
+
+        /* Main Content */
+        .main-container {
+            padding: 120px 4rem 4rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .page-header {
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .gradient {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 45, 85, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Table Container */
+        .table-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .refresh-btn {
+            padding: 0.6rem 1.2rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .refresh-btn:hover {
+            border-color: var(--accent-red);
+        }
+
+        .refresh-btn.loading .refresh-icon {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .data-table th {
+            background: var(--bg-tertiary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .data-table tr:hover {
+            background: var(--glass);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-badge.yeni {
+            background: rgba(255, 45, 85, 0.2);
+            color: var(--accent-red);
+        }
+
+        .status-badge.islemde {
+            background: rgba(255, 193, 7, 0.2);
+            color: var(--warning);
+        }
+
+        .status-badge.cozuldu {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+        }
+
+        /* Category Badge */
+        .category-badge {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Priority Indicator */
+        .priority-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .priority-dot.high {
+            background: var(--danger);
+            box-shadow: 0 0 10px var(--danger);
+        }
+
+        .priority-dot.medium {
+            background: var(--warning);
+        }
+
+        .priority-dot.low {
+            background: var(--success);
+        }
+
+        /* Loading State */
+        .loading-state {
+            padding: 4rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--glass-border);
+            border-top-color: var(--accent-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            padding: 4rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .empty-state .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Message Cell */
+        .message-cell {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .main-container {
+                padding: 100px 1.5rem 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            .data-table {
+                min-width: 800px;
+            }
+        }
+
+        /* Auto-refresh indicator */
+        .auto-refresh {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .auto-refresh .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html" class="logo">
+            <div class="logo-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            CORE
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Ana Sayfa</a></li>
+            <li><a href="bildirim.html">Bildirim Yap</a></li>
+            <li><a href="admin.html" class="admin-btn">🔐 Admin</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">CANLI <span class="gradient">DASHBOARD</span></h1>
+            <p class="page-subtitle">Tüm acil durum bildirimlerini gerçek zamanlı takip edin</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-number" id="totalCount">-</div>
+                <div class="stat-label">Toplam Bildirim</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🆕</div>
+                <div class="stat-number" id="newCount">-</div>
+                <div class="stat-label">Yeni</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-number" id="inProgressCount">-</div>
+                <div class="stat-label">İşlemde</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-number" id="resolvedCount">-</div>
+                <div class="stat-label">Çözüldü</div>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <h2 class="table-title">📋 Bildirimler</h2>
+                <div style="display: flex; align-items: center; gap: 1.5rem;">
+                    <div class="auto-refresh">
+                        <span class="dot"></span>
+                        <span>Otomatik yenileme aktif</span>
+                    </div>
+                    <button class="refresh-btn" id="refreshBtn" onclick="loadData()">
+                        <span class="refresh-icon">🔄</span>
+                        <span>Yenile</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="tableContent">
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p>Veriler yükleniyor...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Google Sheets configuration
+        const SHEET_ID = '1q0OybTzsEovexJqzZ2g5fkZ1kOdEerpJhGqpileOHNU';
+        const SHEET_NAME = 'Sayfa1';
+        const API_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
+
+        // Load data from Google Sheets
+        async function loadData() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            refreshBtn.classList.add('loading');
+
+            try {
+                const response = await fetch(API_URL);
+                const text = await response.text();
+                
+                // Parse the JSONP response
+                const jsonString = text.substring(47).slice(0, -2);
+                const data = JSON.parse(jsonString);
+                
+                const rows = data.table.rows;
+                const headers = data.table.cols.map(col => col.label);
+
+                // Process data
+                const emergencies = rows.map(row => {
+                    const obj = {};
+                    row.c.forEach((cell, index) => {
+                        const header = headers[index] || `col${index}`;
+                        obj[header] = cell ? (cell.v || '') : '';
+                    });
+                    return obj;
+                });
+
+                // Update stats
+                updateStats(emergencies);
+
+                // Render table
+                renderTable(emergencies);
+
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('tableContent').innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">⚠️</div>
+                        <p>Veriler yüklenirken hata oluştu</p>
+                    </div>
+                `;
+            } finally {
+                refreshBtn.classList.remove('loading');
+            }
+        }
+
+        // Update statistics
+        function updateStats(data) {
+            const total = data.length;
+            const newCount = data.filter(d => d.status === 'yeni').length;
+            const inProgress = data.filter(d => d.status === 'islemde').length;
+            const resolved = data.filter(d => d.status === 'cozuldu').length;
+
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('newCount').textContent = newCount;
+            document.getElementById('inProgressCount').textContent = inProgress;
+            document.getElementById('resolvedCount').textContent = resolved;
+        }
+
+        // Render table
+        function renderTable(data) {
+            if (data.length === 0) {
+                document.getElementById('tableContent').innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📭</div>
+                        <p>Henüz bildirim bulunmuyor</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort by timestamp (newest first)
+            data.sort((a, b) => {
+                const dateA = new Date(a.timestamp || 0);
+                const dateB = new Date(b.timestamp || 0);
+                return dateB - dateA;
+            });
+
+            const tableHTML = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Öncelik</th>
+                            <th>Tarih/Saat</th>
+                            <th>Mesaj</th>
+                            <th>Kullanıcı</th>
+                            <th>Kategori</th>
+                            <th>Durum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.map(row => `
+                            <tr>
+                                <td>
+                                    <span class="priority-dot ${getPriorityClass(row.final_category)}"></span>
+                                </td>
+                                <td>${formatDate(row.timestamp)}</td>
+                                <td class="message-cell" title="${escapeHtml(row.message)}">${escapeHtml(row.message)}</td>
+                                <td>${row.username || 'Anonim'}</td>
+                                <td><span class="category-badge">${row.final_category || '-'}</span></td>
+                                <td><span class="status-badge ${row.status}">${getStatusText(row.status)}</span></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            document.getElementById('tableContent').innerHTML = tableHTML;
+        }
+
+        // Helper functions
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleString('tr-TR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch {
+                return dateString;
+            }
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'yeni': '🆕 Yeni',
+                'islemde': '⏳ İşlemde',
+                'cozuldu': '✅ Çözüldü'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getPriorityClass(category) {
+            if (!category) return 'low';
+            const cat = category.toUpperCase();
+            if (cat.includes('KRITIK') || cat.includes('ACIL') || cat.includes('YUKSEK')) return 'high';
+            if (cat.includes('ORTA')) return 'medium';
+            return 'low';
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initial load
+        loadData();
+
+        // Auto-refresh every 30 seconds
+        setInterval(loadData, 30000);
+    </script>
+</body>
+</html>
